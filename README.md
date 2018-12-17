@@ -1,6 +1,8 @@
 # Jupiter
 
-A Windows memory editing library that supports several memory editing methods
+[![Build status](https://ci.appveyor.com/api/projects/status/jp6fnwbq34w012gj?svg=true)](https://ci.appveyor.com/project/Akaion/jupiter)
+
+A Windows memory editing library written in C# that supports several memory editing methods.
 
 ## Supported Methods
 
@@ -19,7 +21,7 @@ A Windows memory editing library that supports several memory editing methods
 
 ## Useage
 
-You can also overload any method with a process id  or a `SafeHandle` to the process instead of a process name
+You can also overload any method with a process id  or a `SafeHandle` to the process instead of a process name.
 
 ```csharp
 using Jupiter;
@@ -32,15 +34,19 @@ var memoryAddress = memoryModule.AllocateMemory("processName", size);
 
 // Free memory
 
-memoryModule.FreeMemory("proessName", address, size);
+memoryModule.FreeMemory("proessName", baseAddress, size);
+
+// Read a byte array from memory
+
+var memoryBytes = memoryModule.ReadMemory("processName", baseAddress, size);
 
 // Read a datatype or structure from memory
 
-var memoryBoolean = memoryModule.ReadMemory<bool>("processName", address);
+var memoryBoolean = memoryModule.ReadMemory<bool>("processName", baseAddress);
 
 // Write a datatype or structure to memory
 
-memoryModule.WriteMemory("processName", object);
+memoryModule.WriteMemory("processName", address, object);
 
 // Find the address of a pattern
 
