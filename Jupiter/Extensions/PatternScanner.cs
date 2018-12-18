@@ -76,6 +76,13 @@ namespace Jupiter.Extensions
         
         private static IntPtr FindPattern(SafeHandle processHandle, MemoryBasicInformation memoryRegion, IReadOnlyList<string> pattern)
         {
+            // Ensure the memory region size is valid
+
+            if ((long) memoryRegion.RegionSize > int.MaxValue)
+            {
+                return IntPtr.Zero;
+            }
+            
             // Get the bytes of the memory region
             
             var memoryRegionBytes = ReadMemory.Read(processHandle, memoryRegion.BaseAddress, (int) memoryRegion.RegionSize);
