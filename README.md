@@ -34,15 +34,15 @@ var memoryAddress = memoryModule.AllocateMemory("processName", size);
 
 // Free memory
 
-memoryModule.FreeMemory("proessName", baseAddress, size);
+memoryModule.FreeMemory("proessName", address, size);
 
 // Read a byte array from memory
 
-var memoryBytes = memoryModule.ReadMemory("processName", baseAddress, size);
+var memoryBytes = memoryModule.ReadMemory("processName", address, size);
 
 // Read a datatype or structure from memory
 
-var memoryBoolean = memoryModule.ReadMemory<bool>("processName", baseAddress);
+var memoryBoolean = memoryModule.ReadMemory<bool>("processName", address);
 
 // Write a datatype or structure to memory
 
