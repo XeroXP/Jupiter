@@ -39,7 +39,7 @@ namespace Jupiter.Methods
         {
             // Ensure the structure isn't a reference type
             
-            if (typeof(TStructure).IsValueType)
+            if (!typeof(TStructure).IsValueType)
             {   
                 throw new ArgumentException("The structure provided was a reference type with no predefined size");
             }
