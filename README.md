@@ -63,7 +63,7 @@ var memoryModule = new MemoryModule();
 
 // Read the bytes of the string
 
-var memoryStringBytes = memoryModule.ReadMemory("processName", baseAddress, size);
+var memoryStringBytes = memoryModule.ReadMemory("processName", address, size);
 
 // Convert the bytes to a string
 
