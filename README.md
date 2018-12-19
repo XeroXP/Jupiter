@@ -34,7 +34,7 @@ var memoryAddress = memoryModule.AllocateMemory("processName", size);
 
 // Free memory
 
-memoryModule.FreeMemory("proessName", address, size);
+memoryModule.FreeMemory("processName", address, size);
 
 // Read a byte array from memory
 
