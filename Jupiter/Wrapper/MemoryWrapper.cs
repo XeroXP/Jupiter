@@ -104,13 +104,6 @@ namespace Jupiter.Wrapper
         internal IntPtr PatternScan(IntPtr baseAddress, string pattern)
         {
             var patternBytes = pattern.Split();
-
-            // Ensure the argument passed in is valid
-
-            if (baseAddress == IntPtr.Zero)
-            {
-                throw new ArgumentException("One or more of the arguments provided was invalid");
-            }
             
             // Ensure the pattern is valid
 

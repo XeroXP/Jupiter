@@ -18,14 +18,14 @@ namespace Jupiter.Extensions
 
             var memoryRegions = new ConcurrentBag<MemoryBasicInformation>
             {
-                // Get the first memory region address
+                // Get the first memory region
                 
                 QueryMemory(processHandle, baseAddress)      
             };
         
             while (true)
             {
-                // Get the next memory region address
+                // Get the address of the next memory region
                 
                 var nextMemoryRegionAddress = (long) memoryRegions.First().BaseAddress + (long) memoryRegions.First().RegionSize;
 
@@ -62,7 +62,7 @@ namespace Jupiter.Extensions
                 patternAddresses.Add(address);
             });
 
-            // Return the first pattern address
+            // Return an array of addresses where the pattern as found
             
             return patternAddresses.FirstOrDefault(address => address != IntPtr.Zero);
         }
@@ -74,7 +74,7 @@ namespace Jupiter.Extensions
             return VirtualQueryEx(processHandle, baseAddress, out var memoryInformation, memoryInformationSize) ? memoryInformation : default;
         }
         
-        private static IntPtr FindPattern(SafeHandle processHandle, MemoryBasicInformation memoryRegion, IReadOnlyList<string> pattern)
+        private static IntPtr FindPattern(SafeHandle processHandle, MemoryBasicInformation memoryRegion, string[] pattern)
         {
             // Ensure the memory region size is valid
 
@@ -92,34 +92,62 @@ namespace Jupiter.Extensions
                 return IntPtr.Zero;
             }
             
+            // Calculate the indexes of any wildcard bytes
+
+            var wildCardIndexArray = pattern.Select((wildcard, index) => wildcard == "??" ? index : -1).Where(index => index != -1).ToArray();
+            
             // Search the memory region for the pattern 
             
             var patternAddress = IntPtr.Zero;
             
-            foreach (var regionByteIndex in Enumerable.Range(0, memoryRegionBytes.Length))
+            // Initialize the lookup directory
+            
+            var lookUpDirectory = new int[byte.MaxValue + 1];
+
+            foreach (var index in Enumerable.Range(0, lookUpDirectory.Length))
             {
-                // If the byte matches the first byte of the pattern
-                
-                if (memoryRegionBytes[regionByteIndex] == int.Parse(pattern[0], NumberStyles.HexNumber))
+                lookUpDirectory[index] = pattern.Length;
+            }
+
+            // Initialize the pattern in the lookup directory
+            
+            foreach (var index in Enumerable.Range(0, pattern.Length))
+            {
+                if (!wildCardIndexArray.Contains(index))
                 {
-                    // Get an array of bytes from the memory region equal to the length of the pattern
-                    
-                    var tempArray = memoryRegionBytes.Skip(regionByteIndex).Take(pattern.Count).ToArray();
+                    lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Length - index - 1;
+                }
+            }
 
-                    // Compare the array to the pattern
-                    
-                    var counter = Enumerable.Range(0, tempArray.Length).Count(tempByteIndex => pattern[tempByteIndex] == "??" || tempArray[tempByteIndex] == int.Parse(pattern[tempByteIndex], NumberStyles.HexNumber));
+            var patternIndex = pattern.Length - 1;
 
-                    // If the array matches the pattern
+            // Get the last byte in the pattern
+            
+            var lastByte = int.Parse(pattern.Last(), NumberStyles.HexNumber);
+
+            // Search for the pattern in the memory region
+            
+            while (patternIndex < memoryRegionBytes.Length)
+            {
+                var currentByte = memoryRegionBytes[patternIndex];
+
+                if (currentByte == lastByte)
+                {
+                    // Check if the pattern exists at the current index
                     
-                    if (counter == pattern.Count)
+                    var patternFound = Enumerable.Range(0, pattern.Length - 2).Reverse().All(index => pattern[index] == "??" || memoryRegionBytes[patternIndex - pattern.Length + index + 1] == int.Parse(pattern[index], NumberStyles.HexNumber));
+
+                    if (patternFound)
                     {
-                        // Get the address of the pattern
-                        
-                        patternAddress = memoryRegion.BaseAddress + regionByteIndex;
-
-                        break;
+                        return memoryRegion.BaseAddress + (patternIndex - pattern.Length + 1);
                     }
+
+                    patternIndex += 1;
+                }
+
+                else
+                {
+                    patternIndex += lookUpDirectory[currentByte];
                 }
             }
 
