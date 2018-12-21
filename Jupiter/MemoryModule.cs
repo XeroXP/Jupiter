@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Jupiter.Wrapper;
 
 namespace Jupiter
@@ -20,6 +21,14 @@ namespace Jupiter
                 return memoryWrapper.AllocateMemory(size);
             }    
         }
+        
+        public IntPtr AllocateMemory(SafeHandle processHandle, int size)
+        {
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
+            {
+                return memoryWrapper.AllocateMemory(size);
+            }    
+        }
 
         public bool FreeMemory(string processName, IntPtr baseAddress, int size)
         {
@@ -32,6 +41,14 @@ namespace Jupiter
         public bool FreeMemory(int processId, IntPtr baseAddress, int size)
         {
             using (var memoryWrapper = new MemoryWrapper(processId))
+            {
+                return memoryWrapper.FreeMemory(baseAddress, size);
+            }
+        }
+        
+        public bool FreeMemory(SafeHandle processHandle, IntPtr baseAddress, int size)
+        {
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
             {
                 return memoryWrapper.FreeMemory(baseAddress, size);
             }
@@ -52,6 +69,14 @@ namespace Jupiter
                 return memoryWrapper.PatternScan(baseAddress, pattern);
             }
         }
+        
+        public IntPtr[] PatternScan(SafeHandle processHandle, IntPtr baseAddress, string pattern)
+        {
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
+            {
+                return memoryWrapper.PatternScan(baseAddress, pattern);
+            }
+        }
 
         public byte[] ReadMemory(string processName, IntPtr baseAddress, int size)
         {
@@ -64,6 +89,14 @@ namespace Jupiter
         public byte[] ReadMemory(int processId, IntPtr baseAddress, int size)
         {
             using (var memoryWrapper = new MemoryWrapper(processId))
+            {
+                return memoryWrapper.ReadMemory(baseAddress, size);
+            }
+        }
+        
+        public byte[] ReadMemory(SafeHandle processHandle, IntPtr baseAddress, int size)
+        {
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
             {
                 return memoryWrapper.ReadMemory(baseAddress, size);
             }
@@ -84,6 +117,14 @@ namespace Jupiter
                 return memoryWrapper.ReadMemory<TStructure>(baseAddress);  
             }   
         }
+        
+        public TStructure ReadMemory<TStructure>(SafeHandle processHandle, IntPtr baseAddress)
+        {     
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
+            {
+                return memoryWrapper.ReadMemory<TStructure>(baseAddress);  
+            }   
+        }
 
         public bool WriteMemory(string processName, IntPtr baseAddress, byte[] buffer)
         {
@@ -100,6 +141,14 @@ namespace Jupiter
                 return memoryWrapper.WriteMemory(baseAddress, buffer);
             }
         }
+        
+        public bool WriteMemory(SafeHandle processHandle, IntPtr baseAddress, byte[] buffer)
+        {
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
+            {
+                return memoryWrapper.WriteMemory(baseAddress, buffer);
+            }
+        }
 
         public bool WriteMemory<TStructure>(string processName, IntPtr baseAddress, TStructure structure)
         {
@@ -112,6 +161,14 @@ namespace Jupiter
         public bool WriteMemory<TStructure>(int processId, IntPtr baseAddress, TStructure structure)
         {
             using (var memoryWrapper = new MemoryWrapper(processId))
+            {
+                return memoryWrapper.WriteMemory(baseAddress, structure);
+            }
+        }
+        
+        public bool WriteMemory<TStructure>(SafeHandle processHandle, IntPtr baseAddress, TStructure structure)
+        {
+            using (var memoryWrapper = new MemoryWrapper(processHandle))
             {
                 return memoryWrapper.WriteMemory(baseAddress, structure);
             }

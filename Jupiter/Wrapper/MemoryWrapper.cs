@@ -69,6 +69,14 @@ namespace Jupiter.Wrapper
 
             _processHandle = process.SafeHandle;
         }
+
+        internal MemoryWrapper(SafeHandle processHandle)
+        {
+            // Ensure the argument passed in is valid
+
+            _processHandle = processHandle ?? throw new ArgumentException("One or more of the arguments provided was invalid");
+
+        }
         
         public void Dispose()
         {

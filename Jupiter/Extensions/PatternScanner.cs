@@ -99,7 +99,7 @@ namespace Jupiter.Extensions
             
             var patternAddress = IntPtr.Zero;
             
-            // Initialize the lookup directory
+            // Initialize a lookup directory
             
             var lookUpDirectory = new int[byte.MaxValue + 1];
 
@@ -112,10 +112,12 @@ namespace Jupiter.Extensions
             
             foreach (var index in Enumerable.Range(0, pattern.Count))
             {
-                if (!wildCardIndexArray.Contains(index))
+                if (wildCardIndexArray.Contains(index))
                 {
-                    lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Count - index - 1;
+                    break;
                 }
+                
+                lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Count - index - 1;
             }
 
             var patternIndex = pattern.Count - 1;
