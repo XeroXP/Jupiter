@@ -12,7 +12,7 @@ namespace Jupiter.Extensions
 {
     internal static class PatternScanner
     {
-        internal static IntPtr Scan(SafeHandle processHandle, IntPtr baseAddress, string[] pattern)
+        internal static IntPtr[] Scan(SafeHandle processHandle, IntPtr baseAddress, string[] pattern)
         {
             // Initialize a list to store the memory regions of the process
 
@@ -44,27 +44,26 @@ namespace Jupiter.Extensions
             }
             
             // Filter the memory regions to avoid searching unnecessary regions
-
-            var filterByState = memoryRegions.Where(memoryRegion => memoryRegion.State == (int) MemoryAllocation.Commit);
             
-            var filterByProtection = filterByState.Where(memoryRegion => memoryRegion.Protect != (int) MemoryProtection.PageNoAccess && memoryRegion.Protect != (int) MemoryProtection.PageGuard);
-
-            var filterByType = filterByProtection.Where(memoryRegion => memoryRegion.Type != (int) MemoryRegionType.MemoryImage);
+            var filteredMemoryRegions = memoryRegions.Where(memoryRegion => memoryRegion.State == (int) MemoryAllocation.Commit
+                                                                         && memoryRegion.Protect != (int) MemoryProtection.PageNoAccess
+                                                                         && memoryRegion.Protect != (int) MemoryProtection.PageGuard
+                                                                         && memoryRegion.Type != (int) MemoryRegionType.MemoryImage);
             
             // Search the filtered memory regions for the pattern
             
             var patternAddresses = new ConcurrentBag<IntPtr>();
             
-            Parallel.ForEach(filterByType, memoryRegion =>
+            Parallel.ForEach(filteredMemoryRegions, memoryRegion =>
             {
                 var address = FindPattern(processHandle, memoryRegion, pattern);
 
                 patternAddresses.Add(address);
             });
 
-            // Return an array of addresses where the pattern as found
+            // Return an array of addresses where the pattern was found
             
-            return patternAddresses.FirstOrDefault(address => address != IntPtr.Zero);
+            return patternAddresses.Where(address => address != IntPtr.Zero).ToArray();
         }
 
         private static MemoryBasicInformation QueryMemory(SafeHandle processHandle, IntPtr baseAddress)
@@ -74,7 +73,7 @@ namespace Jupiter.Extensions
             return VirtualQueryEx(processHandle, baseAddress, out var memoryInformation, memoryInformationSize) ? memoryInformation : default;
         }
         
-        private static IntPtr FindPattern(SafeHandle processHandle, MemoryBasicInformation memoryRegion, string[] pattern)
+        private static IntPtr FindPattern(SafeHandle processHandle, MemoryBasicInformation memoryRegion, IReadOnlyList<string> pattern)
         {
             // Ensure the memory region size is valid
 
@@ -106,20 +105,20 @@ namespace Jupiter.Extensions
 
             foreach (var index in Enumerable.Range(0, lookUpDirectory.Length))
             {
-                lookUpDirectory[index] = pattern.Length;
+                lookUpDirectory[index] = pattern.Count;
             }
 
             // Initialize the pattern in the lookup directory
             
-            foreach (var index in Enumerable.Range(0, pattern.Length))
+            foreach (var index in Enumerable.Range(0, pattern.Count))
             {
                 if (!wildCardIndexArray.Contains(index))
                 {
-                    lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Length - index - 1;
+                    lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Count - index - 1;
                 }
             }
 
-            var patternIndex = pattern.Length - 1;
+            var patternIndex = pattern.Count - 1;
 
             // Get the last byte in the pattern
             
@@ -135,11 +134,11 @@ namespace Jupiter.Extensions
                 {
                     // Check if the pattern exists at the current index
                     
-                    var patternFound = Enumerable.Range(0, pattern.Length - 2).Reverse().All(index => pattern[index] == "??" || memoryRegionBytes[patternIndex - pattern.Length + index + 1] == int.Parse(pattern[index], NumberStyles.HexNumber));
+                    var patternFound = Enumerable.Range(0, pattern.Count - 2).Reverse().All(index => pattern[index] == "??" || memoryRegionBytes[patternIndex - pattern.Count + index + 1] == int.Parse(pattern[index], NumberStyles.HexNumber));
 
                     if (patternFound)
                     {
-                        return memoryRegion.BaseAddress + (patternIndex - pattern.Length + 1);
+                        return memoryRegion.BaseAddress + (patternIndex - pattern.Count + 1);
                     }
 
                     patternIndex += 1;

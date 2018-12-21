@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Jupiter.Wrapper
 {
-    internal class MemoryWrapper
+    internal class MemoryWrapper : IDisposable
     {
         private readonly SafeHandle _processHandle;
         
@@ -69,12 +69,12 @@ namespace Jupiter.Wrapper
 
             _processHandle = process.SafeHandle;
         }
-
-        internal MemoryWrapper(SafeHandle processHandle)
+        
+        public void Dispose()
         {
-            // Ensure the argument passed in is valid
-
-            _processHandle = processHandle ?? throw new ArgumentException("One or more of the arguments provided was invalid");
+            // Ensure the handle is closed
+            
+            _processHandle?.Dispose();
         }
         
         internal IntPtr AllocateMemory(int size)
@@ -101,7 +101,7 @@ namespace Jupiter.Wrapper
             return Methods.FreeMemory.Free(_processHandle, baseAddress, size);
         }
 
-        internal IntPtr PatternScan(IntPtr baseAddress, string pattern)
+        internal IntPtr[] PatternScan(IntPtr baseAddress, string pattern)
         {
             var patternBytes = pattern.Split();
             
@@ -111,6 +111,13 @@ namespace Jupiter.Wrapper
             {
                 throw new ArgumentException("The pattern provided contained one or more invalid characters");
             }
+            
+            // Remove unnecessary wildcards
+
+            patternBytes = patternBytes.SkipWhile(patternByte => patternByte.Equals("??"))
+                                       .Reverse()
+                                       .SkipWhile(patternByte => patternByte.Equals("??"))
+                                       .Reverse().ToArray();
 
             return Extensions.PatternScanner.Scan(_processHandle, baseAddress, patternBytes);
         }
