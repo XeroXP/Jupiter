@@ -5,7 +5,7 @@ using static Jupiter.Etc.Native;
 
 namespace Jupiter.Methods
 {
-    internal static class WriteMemory
+   internal static class WriteMemory
     {
         internal static bool Write(SafeHandle processHandle, IntPtr baseAddress, byte[] buffer)
         {

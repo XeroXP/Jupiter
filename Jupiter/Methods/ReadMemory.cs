@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using static Jupiter.Etc.Native;
 
 namespace Jupiter.Methods
