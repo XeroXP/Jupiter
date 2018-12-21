@@ -21,7 +21,7 @@ A Windows memory editing library written in C# that supports several memory edit
 
 ## Useage
 
-You can also overload any method with a process id  or a `SafeHandle` to the process instead of a process name.
+You can also overload any method with a process id instead of a process name.
 
 ```csharp
 using Jupiter;
@@ -50,7 +50,7 @@ memoryModule.WriteMemory("processName", address, object);
 
 // Find the address of a pattern
 
-var patternAddress = memoryModule.PatternScan("processName", baseAddress, "45 FF ?? 01 ?? ?? 2A");
+var patternAddress = memoryModule.PatternScan("processName", baseAddress, "45 FF ?? 01 ?? ?? 2A")[0];
 ```
 
 To read a string from memory you must do the following
