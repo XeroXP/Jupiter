@@ -10,7 +10,7 @@
         <RepositoryUrl>https://github.com/Akaion/Jupiter</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Version>1.1.1</Version>
+        <Version>1.1.2</Version>
     </PropertyGroup>
 
 </Project>
