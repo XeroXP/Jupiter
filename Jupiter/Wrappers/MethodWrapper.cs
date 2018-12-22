@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using static Jupiter.Etc.Native;
 
 namespace Jupiter.Wrappers
 {
@@ -98,6 +99,18 @@ namespace Jupiter.Wrappers
             
             return Methods.FreeMemory.Free(_processHandle, baseAddress, size);
         }
+
+        internal bool ProtectMemory(IntPtr baseAddress, int size, int protection)
+        {
+            // Ensure the arguments passed in are valid
+
+            if (baseAddress == IntPtr.Zero || size == 0 || !Enum.IsDefined(typeof(MemoryProtection), protection))
+            {
+                throw new ArgumentException("One or more of the arguments provided was invalid");
+            }
+
+            return Methods.ProtectMemory.Protect(_processHandle, baseAddress, size, protection);
+        }
         
         internal byte[] ReadMemory(IntPtr baseAddress, int size)
         {
@@ -110,8 +123,8 @@ namespace Jupiter.Wrappers
             
             return Methods.ReadMemory.Read(_processHandle, baseAddress, size);
         }
-
-        internal TStructure ReadMemory<TStructure>(IntPtr baseAddress)
+        
+        internal TStructure ReadMemory<TStructure>(IntPtr baseAddress) where TStructure : struct
         {
             // Ensure the argument passed in is valid
 
@@ -135,7 +148,19 @@ namespace Jupiter.Wrappers
             return Methods.WriteMemory.Write(_processHandle, baseAddress, buffer);
         }
 
-        internal bool WriteMemory<TStructure>(IntPtr baseAddress, TStructure structure)
+        internal bool WriteMemory(IntPtr baseAddress, string s)
+        {
+            // Ensure the arguments passed in are valid
+
+            if (baseAddress == IntPtr.Zero || string.IsNullOrWhiteSpace(s))
+            {
+                throw new ArgumentException("One or more of the arguments provided was invalid");
+            }
+
+            return Methods.WriteMemory.Write(_processHandle, baseAddress, s);
+        }
+        
+        internal bool WriteMemory<TStructure>(IntPtr baseAddress, TStructure structure) where TStructure : struct
         {
             // Ensure the argument passed in is valid
 

@@ -34,15 +34,8 @@ namespace Jupiter.Methods
             return buffer;
         }
 
-        internal static TStructure Read<TStructure>(SafeHandle processHandle, IntPtr baseAddress)
-        {
-            // Ensure the structure isn't a reference type
-            
-            if (!typeof(TStructure).IsValueType)
-            {   
-                throw new ArgumentException("The structure provided was a reference type with no predefined size");
-            }
-            
+        internal static TStructure Read<TStructure>(SafeHandle processHandle, IntPtr baseAddress) where TStructure : struct
+        {   
             // Get the size of the structure
             
             var size = Marshal.SizeOf(typeof(TStructure));
