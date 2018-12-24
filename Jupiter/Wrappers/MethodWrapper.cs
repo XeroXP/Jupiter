@@ -43,7 +43,7 @@ namespace Jupiter.Wrappers
         {
             // Ensure the argument passed in is valid
 
-            if (processId == 0)
+            if (processId <= 0)
             {
                 throw new ArgumentException("One or more of the arguments provided was invalid");
             }
