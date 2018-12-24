@@ -45,7 +45,7 @@ var memoryModule = new MemoryModule();
 
 // Free memory in a remote process at an address
 
-memoryModule.FreeMemory("processName", address, size);
+memoryModule.FreeMemory("processName", address);
 ```
 
 #### Protect Memory
