@@ -22,7 +22,7 @@ A Windows memory editing library written in C# that supports several memory edit
 
 ## Useage
 
-You can overload any method with the processes id or a safe handle to the process instead of the processes name
+You can overload any method with the processes id instead of the processes name
 
 #### Allocate Memory
 
