@@ -64,9 +64,7 @@ namespace Jupiter.Extensions
 
             // Return an array of addresses where the pattern was found
 
-            return patternAddresses.Where(addressList => addressList.Count > 0)
-                                   .SelectMany(address => address)
-                                   .Where(address => address != IntPtr.Zero).ToArray();
+            return patternAddresses.SelectMany(address => address).Where(address => address != IntPtr.Zero).ToArray();
         }
 
         private static MemoryBasicInformation QueryMemory(SafeProcessHandle processHandle, IntPtr baseAddress)
@@ -78,11 +76,13 @@ namespace Jupiter.Extensions
         
         private static List<IntPtr> FindPattern(SafeProcessHandle processHandle, MemoryBasicInformation memoryRegion, IReadOnlyList<string> pattern)
         {
+            var patternAddresses = new List<IntPtr>();
+            
             // Ensure the memory region size is valid
 
             if ((long) memoryRegion.RegionSize > int.MaxValue)
             {
-                return new List<IntPtr>();
+                return patternAddresses;
             }
             
             // Get the bytes of the memory region
@@ -91,16 +91,12 @@ namespace Jupiter.Extensions
 
             if (memoryRegionBytes is null)
             {
-                return new List<IntPtr>();
+                return patternAddresses;
             }
             
             // Calculate the indexes of any wildcard bytes
 
             var wildCardIndexArray = pattern.Select((wildcard, index) => wildcard == "??" ? index : -1).Where(index => index != -1).ToArray();
-            
-            // Search the memory region for the pattern 
-            
-            var patternAddresses = new List<IntPtr>();
             
             // Initialize a lookup directory
             
