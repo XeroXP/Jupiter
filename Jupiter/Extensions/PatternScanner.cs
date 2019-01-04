@@ -13,7 +13,7 @@ namespace Jupiter.Extensions
 {
     internal static class PatternScanner
     {
-        internal static IntPtr[] Scan(SafeProcessHandle processHandle, IntPtr baseAddress, string[] pattern)
+        internal static IntPtr[] Scan(SafeProcessHandle processHandle, IntPtr baseAddress, List<string> pattern)
         {
             // Initialize a list to store the memory regions of the process
 
@@ -96,7 +96,7 @@ namespace Jupiter.Extensions
             
             // Calculate the indexes of any wildcard bytes
 
-            var wildCardIndexArray = pattern.Select((wildcard, index) => wildcard == "??" ? index : -1).Where(index => index != -1).ToArray();
+            var wildCardIndexArray = pattern.Select((wildcard, index) => wildcard == "??" ? index : -1).Where(index => index != -1).ToList();
             
             // Initialize a lookup directory
             
