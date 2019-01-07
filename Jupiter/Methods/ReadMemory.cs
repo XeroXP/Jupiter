@@ -44,6 +44,11 @@ namespace Jupiter.Methods
             // Read the memory from the memory region
 
             var buffer = Read(processHandle, baseAddress, size);
+
+            if (buffer is null)
+            {
+                return default;
+            }
             
             // Allocate temporary memory to store the buffer
 
