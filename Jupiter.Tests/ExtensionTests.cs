@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Xunit;
 
 namespace Jupiter.Tests
@@ -40,7 +41,7 @@ namespace Jupiter.Tests
 
             var result = _memoryModule.PatternScan(_hostProcessName, IntPtr.Zero, testArrayPattern);
             
-            Assert.True(testRegionAddress == result[0]);
+            Assert.Contains(testRegionAddress, result);
             
             // Free the memory that was allocated
 

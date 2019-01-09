@@ -48,8 +48,7 @@ namespace Jupiter.Extensions
             
             var filteredMemoryRegions = memoryRegions.Where(memoryRegion => memoryRegion.State == (int) MemoryAllocation.Commit
                                                                          && memoryRegion.Protect != (int) MemoryProtection.PageNoAccess
-                                                                         && memoryRegion.Protect != (int) MemoryProtection.PageGuard
-                                                                         && memoryRegion.Type != (int) MemoryRegionType.MemoryImage);
+                                                                         && memoryRegion.Protect != (int) MemoryProtection.PageGuard).ToList();
             
             // Search the filtered memory regions for the pattern
             
@@ -61,7 +60,7 @@ namespace Jupiter.Extensions
 
                 patternAddresses.Add(addresses);
             });
-
+            
             // Return an array of addresses where the pattern was found
 
             return patternAddresses.SelectMany(address => address).Where(address => address != IntPtr.Zero).ToArray();
