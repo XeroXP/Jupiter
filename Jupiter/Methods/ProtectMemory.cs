@@ -10,7 +10,7 @@ namespace Jupiter.Methods
         {
             // Protect memory in the process at the address
             
-            return VirtualProtectEx(processHandle, baseAddress, size, (MemoryProtection) protection, out _);
+            return VirtualProtectEx(processHandle, baseAddress, size, protection, out _);
         }
     }
 }

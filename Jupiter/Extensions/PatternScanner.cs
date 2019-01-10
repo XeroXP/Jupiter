@@ -48,7 +48,8 @@ namespace Jupiter.Extensions
             
             var filteredMemoryRegions = memoryRegions.Where(memoryRegion => memoryRegion.State == (int) MemoryAllocation.Commit
                                                                          && memoryRegion.Protect != (int) MemoryProtection.PageNoAccess
-                                                                         && memoryRegion.Protect != (int) MemoryProtection.PageGuard).ToList();
+                                                                         && memoryRegion.Protect != (int) MemoryProtection.PageGuard
+                                                                         && memoryRegion.Type != (int) MemoryRegionType.MemoryImage).ToList();
             
             // Search the filtered memory regions for the pattern
             
