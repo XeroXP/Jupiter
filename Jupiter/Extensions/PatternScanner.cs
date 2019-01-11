@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -86,10 +87,15 @@ namespace Jupiter.Extensions
             }
             
             // Get the bytes of the memory region
-            
-            var memoryRegionBytes = ReadMemory.Read(processHandle, memoryRegion.BaseAddress, (int) memoryRegion.RegionSize);
 
-            if (memoryRegionBytes is null)
+            byte[] memoryRegionBytes;
+
+            try
+            {
+                memoryRegionBytes = ReadMemory.Read(processHandle, memoryRegion.BaseAddress, (int) memoryRegion.RegionSize);
+            }
+
+            catch (Win32Exception)
             {
                 return patternAddresses;
             }
