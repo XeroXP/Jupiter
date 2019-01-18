@@ -1,10 +1,10 @@
-# Jupiter
+## Jupiter
 
 [![Build status](https://ci.appveyor.com/api/projects/status/jp6fnwbq34w012gj?svg=true)](https://ci.appveyor.com/project/Akaion/jupiter)
 
 A Windows memory editing library written in C# that supports several memory editing methods.
 
-## Supported Methods
+### Supported Methods
 
 * Allocate Memory
 * Free Memory
@@ -12,15 +12,15 @@ A Windows memory editing library written in C# that supports several memory edit
 * Read Memory
 * Write Memory
 
-## Extensions
+### Extensions
 
 * Pattern Scanning with support for wildcard bytes
 
-## Installation
+### Installation
 
 * Download and install Jupiter using [NuGet](https://www.nuget.org/packages/Jupiter)
 
-## Useage
+### Useage
 
 You can overload any method with the processes id instead of the processes name
 
@@ -106,7 +106,7 @@ var memoryModule = new MemoryModule();
 var patternAddresses = memoryModule.PatternScan("processName", IntPtr.Zero, "45 FF ?? 01 ?? ?? 2A");
 ```
 
-## Contributing
+### Contributing
 
 Pull requests are welcome. 
 
