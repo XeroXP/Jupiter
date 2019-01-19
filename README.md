@@ -14,7 +14,7 @@ A Windows memory editing library written in C# that supports several memory edit
 
 ### Extensions
 
-* Pattern Scanning with support for wildcard bytes
+* Pattern Scanning with support for wildcard bytes (using the Bower-Moore algorithm for comparisons)
 
 ### Installation
 
