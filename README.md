@@ -4,6 +4,8 @@
 
 A Windows memory editing library written in C# that supports several memory editing methods.
 
+----
+
 ### Supported Methods
 
 * Allocate Memory
@@ -16,13 +18,17 @@ A Windows memory editing library written in C# that supports several memory edit
 
 * Pattern Scanning with support for wildcard bytes (using the Bower-Moore algorithm for comparisons)
 
+----
+
 ### Installation
 
 * Download and install Jupiter using [NuGet](https://www.nuget.org/packages/Jupiter)
 
+----
+
 ### Useage
 
-You can overload any method with the processes id instead of the processes name
+All methods can be overloaded with the processes id instead of the processes name
 
 #### Allocate Memory
 
@@ -106,8 +112,12 @@ var memoryModule = new MemoryModule();
 var patternAddresses = memoryModule.PatternScan("processName", IntPtr.Zero, "45 FF ?? 01 ?? ?? 2A");
 ```
 
+----
+
 ### Contributing
 
 Pull requests are welcome. 
 
 For large changes, please open an issue first to discuss what you would like to add.
+
+----
