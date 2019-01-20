@@ -112,6 +112,19 @@ var memoryModule = new MemoryModule();
 var patternAddresses = memoryModule.PatternScan("processName", IntPtr.Zero, "45 FF ?? 01 ?? ?? 2A");
 ```
 
+You also have the option to overload the pattern with a byte array representing the pattern if wildcard bytes are not needed
+
+```csharp
+using Jupiter;
+
+var memoryModule = new MemoryModule();
+
+// Find the addresses where a pattern appears in a remote process
+
+var pattern = new byte[] {0x45, 0xFF, 0x00, 0x01, 0x24, 0xAA, 0x2A};
+
+var patternAddresses = memoryModule.PatternScan("processName", IntPtr.Zero, pattern);
+
 ----
 
 ### Contributing
