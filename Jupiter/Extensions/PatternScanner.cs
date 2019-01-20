@@ -117,12 +117,10 @@ namespace Jupiter.Extensions
             
             foreach (var index in Enumerable.Range(0, pattern.Count))
             {
-                if (wildCardIndexList.Contains(index))
+                if (!wildCardIndexList.Contains(index))
                 {
-                    break;
-                }
-                
-                lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Count - index - 1;
+                    lookUpDirectory[int.Parse(pattern[index], NumberStyles.HexNumber)] = pattern.Count - index - 1;
+                }      
             }
 
             var patternIndex = pattern.Count - 1;

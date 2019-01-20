@@ -77,23 +77,62 @@ namespace Jupiter.Wrappers
         
         internal IntPtr[] PatternScan(IntPtr baseAddress, string pattern)
         {
-            var patternBytes = pattern.Split().ToList();
+            // Ensure the arguments passed in are valid
+
+            if (string.IsNullOrWhiteSpace(pattern))
+            {
+                throw new ArgumentException("One or more of the arguments provided was invalid");
+            }
+            
+            var patternByteList = pattern.Split().ToList();
             
             // Ensure the pattern is valid
 
-            if (patternBytes.Any(patternByte => patternByte != "??" && ! int.TryParse(patternByte, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _)))
+            if (patternByteList.Any(patternByte => patternByte != "??" && ! int.TryParse(patternByte, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _)))
             {
                 throw new ArgumentException("The pattern provided contained one or more invalid characters");
             }
             
             // Remove unnecessary wildcards
 
-            patternBytes = patternBytes.SkipWhile(patternByte => patternByte.Equals("??"))
-                                       .Reverse()
-                                       .SkipWhile(patternByte => patternByte.Equals("??"))
-                                       .Reverse().ToList();
+            patternByteList = patternByteList.SkipWhile(patternByte => patternByte.Equals("??"))
+                                             .Reverse()
+                                             .SkipWhile(patternByte => patternByte.Equals("??"))
+                                             .Reverse().ToList();
             
-            return Extensions.PatternScanner.Scan(_processHandle, baseAddress, patternBytes);
-        } 
+            return Extensions.PatternScanner.Scan(_processHandle, baseAddress, patternByteList);
+        }
+        
+        internal IntPtr[] PatternScan(IntPtr baseAddress, byte[] patternBytes)
+        {
+            // Ensure the arguments passed in are valid
+
+            if (patternBytes is null || patternBytes.Length == 0)
+            {
+                throw new ArgumentException("One or more of the arguments provided was invalid");
+            }
+            
+            // Get the hexadecimal representation of each byte
+            
+            var pattern = BitConverter.ToString(patternBytes).Replace("-", " ");
+            
+            var patternByteList = pattern.Split().ToList();
+            
+            // Ensure the pattern is valid
+
+            if (patternByteList.Any(patternByte => patternByte != "??" && ! int.TryParse(patternByte, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _)))
+            {
+                throw new ArgumentException("The pattern provided contained one or more invalid characters");
+            }
+            
+            // Remove unnecessary wildcards
+
+            patternByteList = patternByteList.SkipWhile(patternByte => patternByte.Equals("??"))
+                                             .Reverse()
+                                             .SkipWhile(patternByte => patternByte.Equals("??"))
+                                             .Reverse().ToList();
+            
+            return Extensions.PatternScanner.Scan(_processHandle, baseAddress, patternByteList);
+        }
     }
 }
