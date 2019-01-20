@@ -124,7 +124,7 @@ var memoryModule = new MemoryModule();
 var pattern = new byte[] {0x45, 0xFF, 0x00, 0x01, 0x24, 0xAA, 0x2A};
 
 var patternAddresses = memoryModule.PatternScan("processName", IntPtr.Zero, pattern);
-
+```
 ----
 
 ### Contributing
