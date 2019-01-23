@@ -28,7 +28,7 @@ A Windows memory editing library written in C# that supports several memory edit
 
 ### Useage
 
-All methods can be overloaded with the processes id instead of the processes name
+**Note** that any method can be overloaded with a process id instead of a process name
 
 #### Allocate Memory
 
@@ -132,5 +132,3 @@ var patternAddresses = memoryModule.PatternScan("processName", IntPtr.Zero, patt
 Pull requests are welcome. 
 
 For large changes, please open an issue first to discuss what you would like to add.
-
-----
