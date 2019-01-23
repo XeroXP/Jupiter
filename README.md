@@ -28,7 +28,7 @@ A Windows memory editing library written in C# that supports several memory edit
 
 ### Useage
 
-**Note** that any method can be overloaded with a process id instead of a process name
+Any method can be overloaded with a process id instead of a process name
 
 #### Allocate Memory
 
