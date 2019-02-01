@@ -16,7 +16,7 @@ A Windows external memory editing library written in C# that supports several me
 
 ### Extensions
 
-* Pattern Scanning with support for wildcard bytes (using the Bower-Moore algorithm for comparisons)
+* Pattern Scanning with support for wildcard bytes
 
 ----
 
