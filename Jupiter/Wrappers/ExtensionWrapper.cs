@@ -19,7 +19,7 @@ namespace Jupiter.Wrappers
                 throw new ArgumentException("One or more of the arguments provided was invalid");
             }
             
-            // Get an instance of the process
+            // Get an instance of the remote process
             
             Process process;
 
@@ -35,7 +35,7 @@ namespace Jupiter.Wrappers
                 throw new Exception($"No process with name {processName} is currently running");
             }
             
-            // Get a handle to the process
+            // Get a handle to the remote process
 
             _processHandle = process.SafeHandle;
         }
@@ -49,7 +49,7 @@ namespace Jupiter.Wrappers
                 throw new ArgumentException("One or more of the arguments provided was invalid");
             }
             
-            // Get an instance of the process
+            // Get an instance of the remote process
             
             Process process;
 
@@ -65,7 +65,7 @@ namespace Jupiter.Wrappers
                 throw new Exception($"No process with id {processId} is currently running");
             }
             
-            // Get a handle to the process
+            // Get a handle to the remote process
 
             _processHandle = process.SafeHandle;
         }
